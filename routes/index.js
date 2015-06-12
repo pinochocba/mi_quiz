@@ -5,12 +5,12 @@ var quizController = require('../controllers/quiz_controller');
 
 /* GET home page. */
 router.get('/', function(req, res) {
-    res.render('index', { title: 'Quiz' });
+    res.render('index', { title: 'Quiz', errors: []});
 });
 
 /* GET Author */
 router.get('/author', function(req, res) {
-	res.render('author', { author: 'Juan P Gomez' });
+	res.render('author', { author: 'Juan P Gomez', errors: []});
 });
 
 // Autoload de comandos con :quizId
