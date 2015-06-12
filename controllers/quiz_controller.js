@@ -15,9 +15,13 @@ exports.load = function(req, res, next, quizId) {
 
 // GET /quizes
 exports.index = function(req, res) {
-    models.Quiz.findAll().then(
+    models.Quiz.findAll({ where: ["pregunta like ?", '%' + req.query.search + '%'] }).then(
         function(quizes) {
-            res.render('quizes/index.ejs', { quizes: quizes});
+            if (quizes.length) {
+                res.render('quizes/index.ejs', { quizes: quizes });
+            }else {
+                res.render('quizes/null.ejs', { title: "No existen registros" })
+            }
         }
     ).catch(function(error) { next(error);})
 };

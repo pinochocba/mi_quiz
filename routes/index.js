@@ -13,6 +13,11 @@ router.get('/author', function(req, res) {
 	res.render('author', { author: 'Juan P Gomez' });
 });
 
+// GET para busqueda de preguntas
+router.get('/form', function(req, res) {
+	res.render('form', { title: 'Ingrese su Busqueda:'})
+});
+
 // Autoload de comandos con :quizId
 router.param('quizId', quizController.load); // autoload :quizId
 
