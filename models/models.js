@@ -25,22 +25,52 @@ var sequelize = new Sequelize(DB_name, user, pwd, {
     omitNull: true // solo Postgres
 });
 
-// Importar definicion de la tabla Quiz
-var quiz_path = path.join(__dirname, 'quiz');
-var Quiz = sequelize.import(quiz_path);
 
-exports.Quiz = Quiz; // exportar tabla Quiz
+// Importamos la definición de la tabla Categories desde
+// 'categories.js' en la propiedad Categories del modelo
+var Categories = sequelize.import(path.join(__dirname, 'categories'));
+exports.Categories = Categories;
 
-// sequelize.sync() inicializa tabla de preguntas en DB
-sequelize.sync().then(function() {
-    // then(..) ejecuta el manejador una vez creada la tabla
-    Quiz.count().then(function(count) {
-        if (count === 0) { // la tabla se inicializa solo si está vacía
-            Quiz.bulkCreate(
-				[ 	{pregunta: 'Capital de Italia', respuesta: 'Roma'},
-					{pregunta: 'Capital de Portugal', respuesta: 'Lisboa'}
-				]
-			).then(function(){console.log('Base de datos inicializada')});
-        };
+
+// Importamos la definíción de la tabla desde 'quiz.js'
+// y la exportamos en la propiedad Quiz de 'models.js'
+var Quiz = sequelize.import(path.join(__dirname, 'quiz'));
+Quiz.belongsTo(Categories, { foreignKey : 'cat_id' });
+exports.Quiz = Quiz;
+
+
+// Sincronizamos todos los modelos con las
+// tablas de las BBDD 'físicas'. Si no existe 'físicamente' se
+// crean (automáticamente) y la rellenamos con los primeros registros
+var first_cat_id;
+Categories.sync().then(function () {
+    Categories
+    .count()
+    .then(function (count) {
+        if (count === 0) {
+            Categories.bulkCreate([
+                { categoria : 'Otros' },
+                { categoria : 'Humanidades' },
+                { categoria : 'Ocio' },
+                { categoria : 'Ciencia' },
+                { categoria : 'Tecnología' }
+            ]).then(function () {
+                Categories.findOne({
+                    where : {
+                        categoria : 'Otros'
+                    }
+                }).then(function (categoria) {
+                    first_cat_id = categoria.id;
+                    Quiz.sync({ force : true }).then(function () {
+                        Quiz.bulkCreate([
+                            { pregunta  : 'Capital de italia', respuesta : 'Roma', cat_id : first_cat_id },
+                            { pregunta : 'Capital de Portugal', respuesta : 'Lisboa', cat_id : first_cat_id }
+                        ]).then(function () {
+                            console.log('Base de datos inicializada');
+                        });
+                    });
+                });
+            });
+        }
     });
 });

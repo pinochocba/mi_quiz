@@ -2,5 +2,20 @@
 <input type="text" id="preg" name="quiz[pregunta]" value="<%= quiz.pregunta %>"/> <p>
 <label for="resp" class="rem">Respuesta:</label>
 <input type="text" id="resp" name="quiz[respuesta]" value="<%= quiz.respuesta %>"/> <p>
+
+<select name="quiz[cat_id]" id="newcat">
+
+	<%
+		var checked = '';
+		for (var i = 0; i < categories.length; i++) {
+			if(categories[i].id === quiz.cat_id){
+				checked=' selected';
+			}
+	%>
+		<option value="<%= categories[i].id %>" <%= checked %>><%= categories[i].categoria %></option>
+	<% } %>
+
+</select>
+
 <a href="/quizes"><button type="button">Cancelar</button></a>
 <input type="submit" value="Salvar">
