@@ -29,14 +29,23 @@ var sequelize = new Sequelize(DB_name, user, pwd, {
 // Importamos la definición de la tabla Categories desde
 // 'categories.js' en la propiedad Categories del modelo
 var Categories = sequelize.import(path.join(__dirname, 'categories'));
-exports.Categories = Categories;
 
 
 // Importamos la definíción de la tabla desde 'quiz.js'
 // y la exportamos en la propiedad Quiz de 'models.js'
 var Quiz = sequelize.import(path.join(__dirname, 'quiz'));
 Quiz.belongsTo(Categories, { foreignKey : 'cat_id' });
+
+
+// Importamos la definicion de la tabla Comments
+var Comment = sequelize.import(path.join(__dirname, 'comment'));
+Comment.belongsTo(Quiz);
+Quiz.hasMany(Comment);
+
+
+exports.Categories = Categories;
 exports.Quiz = Quiz;
+exports.Comment = Comment;
 
 
 // Sincronizamos todos los modelos con las
@@ -66,7 +75,9 @@ Categories.sync().then(function () {
                             { pregunta  : 'Capital de italia', respuesta : 'Roma', cat_id : first_cat_id },
                             { pregunta : 'Capital de Portugal', respuesta : 'Lisboa', cat_id : first_cat_id }
                         ]).then(function () {
-                            console.log('Base de datos inicializada');
+                            Comment.sync().then(function() {
+                                console.log('Base de datos inicializada');
+                            });
                         });
                     });
                 });
