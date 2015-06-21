@@ -31,6 +31,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Helpers dinamicos:
 app.use(function(req, res, next) {
 
+    // Control de Auto logout
+    if (req.session.user){
+        var old = req.session.user.date;
+        var now = Date.now();
+        var time = (now - old)/1000;    // Tiempo transcurrido desde login en segundos
+
+        if (time > 120) {  // 2 minutos
+            delete req.session.user;
+        }else {
+            req.session.user.date = now;
+        }
+    }
+
     // Guardar path en session.redir para despues del login
     if (!req.path.match(/\/login|\/logout/)) {
         req.session.redir = req.path;

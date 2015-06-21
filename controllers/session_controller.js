@@ -29,10 +29,14 @@ exports.create = function(req, res) {
 			return;
 		}
 
+		// Fecha actual para el Auto logout
+		var date = Date.now();
+
 		// Crear req.session.user y guardar campos id y username
 		// La sesion se define por la existencia de: req.session.user
-		req.session.user = { id: user.id, username: user.username };
-
+		
+		req.session.user = { id: user.id, username: user.username, date:date };
+		
 		res.redirect(req.session.redir.toString()); 	// Redireccion a path anterior a login
 	});
 };
