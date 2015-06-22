@@ -12,3 +12,15 @@ nav span 				{ margin: 0px 10px 0px 0px;}
 
 #ErrorMsgs				{ color: #f61; font-size: smaler}
 .right					{ float: right; }
+
+.tg  					{ border-collapse:collapse;
+						  border-spacing:0;
+						  border-color:#ccc;}
+
+.tg td 					{ padding:10px 5px; 
+						  border-style:solid; border-width:1px;
+						  overflow:hidden; word-break:normal; 
+						  border-color:#ccc;
+						  background-color:#f0f0f0;}
+
+.tg .tg-eph 			{ background-color:#f9f9f9}

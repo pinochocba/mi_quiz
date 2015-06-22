@@ -1,0 +1,22 @@
+<table class="tg">
+  <tr>
+    <td>Preguntas</td>
+    <td><%= quizes.length %></td>
+  </tr>
+  <tr>
+    <td class="tg-eph">Comentarios</td>
+    <td class="tg-eph"><%= comments.length %></td>
+  </tr>
+  <tr>
+    <td>Comentario Medio<br>por Pregunta</td>
+    <td><%= quizes.length/comments.length %></td>
+  </tr>
+  <tr>
+    <td class="tg-eph">Preguntas sin<br>Comentarios</td>
+    <td class="tg-eph"><%= q_nocomment.length %></td>
+  </tr>
+  <tr>
+    <td>Preguntas con<br>Comentarios</td>
+    <td><%= q_comment.length %></td>
+  </tr>
+</table>

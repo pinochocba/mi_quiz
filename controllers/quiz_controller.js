@@ -29,6 +29,30 @@ exports.index = function(req, res) {
     ).catch(function(error) { next(error);})
 };
 
+// GET /quizes/statistics
+exports.stat = function(req, res) {
+    models.Quiz.findAll().then(function(quizes) {
+        models.Comment.findAll().then(function(comments) {
+            models.sequelize.query('SELECT * FROM "Quizzes" AS "Q" INNER JOIN "Comments" AS "C" ON "Q"."id" = "C"."QuizId"',
+            { type: models.sequelize.QueryTypes.SELECT})
+            .then(function(q_comment) {
+            models.sequelize.query('SELECT * FROM "Quizzes" AS "Q" LEFT JOIN "Comments" AS "C" ON "Q"."id" = "C"."QuizId" WHERE "C"."QuizId" IS NULL',
+            { type: models.sequelize.QueryTypes.SELECT})
+            .then(function(q_nocomment) {
+                
+                res.render('quizes/statistics', {
+                                                quizes: quizes,
+                                                comments: comments,
+                                                q_comment: q_comment,
+                                                q_nocomment: q_nocomment,
+                                                errors: []
+                    });
+                });
+            });
+        });
+    });
+};
+
 // GET /quizes/:id
 exports.show = function(req, res) {
     res.render('quizes/show', { 
